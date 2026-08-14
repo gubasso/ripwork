@@ -182,6 +182,18 @@ a decision.
 `max_rounds:` is a hard ceiling enforced before a round is materialized, and reaching it is a failure
 rather than a success. A round that produced no files refuses to continue or converge.
 
+### The criterion and the decision are different things
+
+`until:` and the outcome a driver reports are not two spellings of one verdict, and neither replaces
+the other. `until:` is the criterion: authored once at design time and identical every round. The
+outcome is the decision: emitted once per round boundary and different each round. What would be
+redundant is ripwork evaluating the criterion while a driver also reported an outcome, which is two
+authorities for one verdict — and removing the evaluation is what leaves the driver's report as the
+sole one.
+
+An evidence path on `until:` stays available later without breaking any authored workflow, because a
+plain string remains valid if an added key is optional.
+
 A loop is a runtime scope, not a resolve-time expansion. Composites flatten statically into dotted
 sibling handles; a loop resolves to one node carrying an unexpanded but fully validated template. A
 loop's output directory is its last completed round's.
@@ -197,6 +209,15 @@ Recorded so it is not re-proposed:
 - No `for_each:`. Unknown cardinality lives inside a step whose brief owns its loop.
 - No exclusion marker. `needs:` carries it.
 - No expression language, anywhere, in any position.
+- No designated verdict step. Marking one step in a loop body as the one that decides is the same
+  special-step marker `matrix:` was refused for, and it is wrong for every body where the verdict is
+  not one step's to give.
+- No designated output key on a loop step. It puts content in the definition and makes a step
+  definition depend on its call site. The surviving form of the idea is the completeness rule, which
+  asks that the round produced a file rather than that a named step produced a named one.
+- No structured map for the stopping criterion, which is schema without semantics, and no machine
+  predicate over a reserved file, which resurrects the expression language and disguises a judgment as
+  a computation.
 
 ## Validator rules
 

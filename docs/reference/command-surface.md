@@ -193,6 +193,12 @@ that is a decision.
 | `unfeasible`    | the driver judges the run cannot succeed       |
 | `needs-user`    | the decision requires a person                 |
 
+The two vocabularies are orthogonal axes, not one list split in half. The outcome says what happens to
+the loop; the reason says why the driver decided it. Every pairing is legal, and the combinations
+carry the distinctions that matter: `abort` with `unfeasible` is a run that cannot succeed, while
+`pause` with `needs-user` is one that can and is waiting on a person. Collapsing them into a single
+vocabulary would lose exactly those.
+
 Three transitions are illegal and report `2`: advancing past `max_rounds`, and reporting `continue`
 or `converged` on a round that produced no files. `pause` and `abort` stay legal on an incomplete
 round, so an empty round can still be escaped.

@@ -68,10 +68,19 @@ A conformant driver MUST:
   receipt does not say whether the work ran, so a driver reads back the `dispatch` value it supplied
   and asks its own runtime before choosing between recording an outcome and reclaiming;
 - surface a `requires_judgment` directive to a person, or abort;
+- adapt at run time and keep the run going on best effort, because nothing about what a step produced
+  is enforced and a driver that halts on the first surprise halts on most runs;
+- stop a run it judges unfeasible — a dead end, or a loop that is repeating without converging —
+  rather than continuing to spend against it. Inside a loop that is an `abort` with the `unfeasible`
+  reason; outside one it is recording the current node `failed`, which makes the run terminal;
 - stop on a terminal state, and report at the end what it had to work around — a brief that did not
   produce what a downstream step needed, a step whose declared artifacts no longer match it, an edge
   that turned out to be missing. ripwork enforces none of that at run time, so a driver adapting
   silently is the only thing standing between a gap in a definition and a person who could close it.
+
+Two of those obligations pull against each other on purpose. Adapting keeps a run alive through a
+surprise; judging it unfeasible ends one that cannot succeed. Which applies is the judgment ripwork
+declines to make, and the reason vocabulary is where a driver records which it chose.
 
 ## Driver prohibitions
 
