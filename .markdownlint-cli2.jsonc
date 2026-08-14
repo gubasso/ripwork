@@ -1,0 +1,31 @@
+// The project markdownlint config, discovered for the working directory and
+// merged over whatever `--config` a hook passes.
+//
+// The required-headings rule is deliberately absent, not set to false. This file
+// merges OVER the `--config` base the heading-shape hooks pass, so any value here
+// — `false` included — would override every shape in ./.markdownlint/ while the
+// hooks kept reporting success. That rule is inert without a `headings` array, so
+// omitting it is the correct state. Naming it here at all, even to switch it off,
+// is the failure this comment exists to prevent.
+//
+// Single source of truth: this .jsonc is the ONLY markdownlint config. Do not add
+// a `.markdownlint.{yaml,json,...}` — when both exist, the `.markdownlint.*` rules
+// win and silently override the `config` block below.
+{
+  "config": {
+    "default": true,
+
+    // Relative-link integrity: the explicit target resolves to a real file, and
+    // its #fragment to a real heading. This is the gate behind the cross-link
+    // discipline every page in docs/ depends on.
+    "relative-links": true,
+
+    "MD013": false, // line length — prose is hand-wrapped at 100, tables and links are not
+    "MD024": { "siblings_only": true }, // duplicate headings across sections, not within one
+    "MD029": { "style": "ordered" }, // ordered lists number 1./2./3.
+    "MD033": false, // inline HTML — needed for the allow-emphasis escape comment
+    "MD046": { "style": "fenced" } // fenced code blocks only, each declaring a language
+  },
+  "customRules": ["markdownlint-rule-relative-links"],
+  "ignores": [".draft/"]
+}

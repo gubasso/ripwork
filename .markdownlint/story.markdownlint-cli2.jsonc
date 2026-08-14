@@ -1,0 +1,29 @@
+// The story heading shape, gated by MD043 required-headings. The `md-story` hook
+// in ../.pre-commit-config.yaml owns which documents this applies to.
+//
+// This file is loaded by its own hook with an explicit --config, because MD043
+// takes one `headings` array and the epic shape needs a different one. The
+// project's general ../.markdownlint-cli2.jsonc MUST NOT mention MD043 at any
+// value, including false: it is merged over this file and would silently
+// disable the contract.
+{
+  "config": {
+    "MD043": {
+      "headings": [
+        "*",
+        "## Goal",
+        "## Example",
+        "## Core",
+        "## In scope",
+        "## Out of scope",
+        "## Governed by",
+        "## Amends",
+        "## Acceptance",
+        "## Tasks",
+        "## Rabbit holes",
+        "## Done when",
+        "## Revisions"
+      ]
+    }
+  }
+}

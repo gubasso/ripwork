@@ -1,0 +1,113 @@
+# What waits behind the validator: the linear run that proves the lifecycle end
+# to end, then the composites and recovery that rest on it, then the two
+# contracts that can only be proven once something real drives them.
+lane: backlog
+stories:
+
+  - id: "007"
+    slug: resolve-materializes-the-run
+    type: story
+    points: 3
+    summary: "Validates a definition and only then writes the run-state document and one directory per node, so an invalid definition leaves no directories behind and a materialized run is one that already passed every structural rule."
+    needs: ["005"]
+    epic: "006"
+
+  - id: "008"
+    slug: next-reports-the-frontier
+    type: story
+    points: 2
+    summary: "Reports one ready node with the upstream directories chosen for it, or the run's state when none is ready, so a driver never derives an input path or guesses whether work remains."
+    needs: ["007"]
+    epic: "006"
+
+  - id: "009"
+    slug: claim-and-reclaim-own-a-node
+    type: story
+    points: 2
+    summary: "Mints a claim token that is the only thing a receipt will accept, and lets a driver take a node whose owner never returned by naming the previous token and a reason that the record keeps."
+    needs: ["008"]
+    epic: "006"
+
+  - id: "010"
+    slug: record-writes-the-receipt
+    type: story
+    points: 3
+    summary: "Verifies the claim token, inventories the node directory, and writes a receipt whose key set is closed and enforced by equality, so no token count or duration can be added to it quietly later."
+    needs: ["009"]
+    epic: "006"
+    note: waits on Q-002, which decides whether a failed node has a path back
+
+  - id: "011"
+    slug: summary-reports-the-run
+    type: story
+    points: 1
+    summary: "Reports each node's status, engine, and output count beside the run's own state, giving a person or a job one call that answers what happened without reading the run-state document by hand."
+    needs: ["010"]
+    epic: "006"
+
+  - id: "013"
+    slug: composites-flatten-into-dotted-handles
+    type: story
+    points: 3
+    summary: "Expands a referenced workflow at resolve time into dotted sibling handles inside the caller's graph, so a composite adds nodes without adding a scope that edges would have to cross."
+    needs: ["011"]
+    epic: "012"
+    note: waits on Q-003, which decides whether coarse cross-scope exclusion stands
+
+  - id: "014"
+    slug: a-loop-materializes-one-round-at-a-time
+    type: story
+    points: 3
+    summary: "Resolves a loop to a single node carrying a validated but unexpanded template, and materializes round N+1 only when a decision arrives, so a run's size is never fixed by a count nobody could know at load."
+    needs: ["013"]
+    epic: "012"
+
+  - id: "015"
+    slug: advance-is-the-only-writer-of-a-round
+    type: story
+    points: 2
+    summary: "Applies or refuses a round transition against the ceiling, the decision token, both closed vocabularies, and the rule that a round producing no files can neither continue nor converge."
+    needs: ["014"]
+    epic: "012"
+
+  - id: "016"
+    slug: a-crashed-run-reconciles
+    type: story
+    points: 2
+    summary: "Reports a claimed node with no receipt as still running rather than lost or done, so a driver returning after a crash reclaims exactly the work that never terminated and dispatches nothing twice."
+    needs: ["011"]
+    epic: "012"
+    note: waits on Q-002 alongside 010
+
+  - id: "018"
+    slug: a-driver-declares-its-capabilities
+    type: story
+    points: 2
+    summary: "Records a driver's declaration once at resolve and enforces it thereafter, so an undeclared capability is one ripwork refuses to exercise and a limited driver gets a run it can honour instead of a silent substitution."
+    needs: ["007"]
+    epic: "017"
+
+  - id: "019"
+    slug: the-conformance-fixture-reaches-a-golden-result
+    type: story
+    points: 3
+    summary: "Drives a scripted driver through ordering, loop exhaustion, pause, stale tokens, and crash recovery to one deterministic history, so conformance is a fixture a candidate driver passes rather than a claim it makes."
+    needs: ["016", "018"]
+    epic: "017"
+
+  - id: "021"
+    slug: a-runner-supplies-the-conformance-fields
+    type: story
+    points: 3
+    summary: "Builds one argument vector and one durable job whose ten conformance fields are present, with the five normalized ones normalized and the provider's own diagnostics preserved rather than translated."
+    needs: ["011"]
+    epic: "020"
+    note: waits on Q-004, which decides who inlines a brief for an agent that cannot read one
+
+  - id: "022"
+    slug: a-runner-preflights-its-preconditions
+    type: story
+    points: 2
+    summary: "Checks the standing version and authentication preconditions before the durable state document exists, so a launch that never happened stays distinguishable from a run that happened and failed."
+    needs: ["021"]
+    epic: "020"

@@ -1,0 +1,36 @@
+# The first round: nothing runs until a definition can be trusted, so the whole
+# of epic 001 is scheduled and nothing else is. The registry validator leads
+# because it is the one entry no question blocks and nothing gates.
+lane: todo
+stories:
+
+  - id: "004"
+    slug: the-engine-registry-validates
+    type: story
+    points: 2
+    summary: "Holds every registry row to the five invariants — derived id, unique id, exactly four fields, a provider-valid effort, and a declared runner — so a step naming an engine that cannot exist fails before a run is materialized."
+    epic: "001"
+
+  - id: "002"
+    slug: the-workspace-resolves-per-file
+    type: story
+    points: 2
+    summary: "Resolves each workspace file independently across the layers and reports the layer it came from, so a project-authored workflow can reference a shipped step and shadowing is visible rather than inferred."
+    epic: "001"
+    note: waits on Q-001, which decides how many layers there are
+
+  - id: "003"
+    slug: the-definition-grammar-validates
+    type: story
+    points: 3
+    summary: "Applies every grammar rule to a loaded definition — one kind key per entry, unique handles, resolvable edges, no cycles, safe path segments, and the scalar rules — reporting each violation as a finding rather than stopping at the first."
+    needs: ["002", "004"]
+    epic: "001"
+
+  - id: "005"
+    slug: validate-reports-every-finding
+    type: story
+    points: 1
+    summary: "Emits the validation document with every finding a definition produced and the keys it checked, so an author repairs four mistakes in one pass instead of rediscovering them one run at a time."
+    needs: ["003"]
+    epic: "001"

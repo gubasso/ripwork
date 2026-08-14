@@ -1,0 +1,79 @@
+# Documentation gates. This repository carries a specification and no
+# implementation, so there is nothing here to build, test, or format.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  # The markdownlint shape configs are JSONC, which check-yaml cannot read and
+  # check-json rejects for its comments. Both overrides are load-bearing: the
+  # hook declares `types_or: [json, json5]`, identify tags a .jsonc file as
+  # neither, and pre-commit intersects the type filter with `files` — so `files`
+  # alone only narrows. Relaxing `types_or` is what widens it. Without both, this
+  # hook reports success while checking nothing.
+  - repo: https://github.com/maresb/check-json5
+    rev: v1.0.1
+    hooks:
+      - id: check-json5
+        types_or: [file]
+        files: '\.jsonc?$'
+
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.18.1
+    hooks:
+      # The general profile. Every rule except MD043 comes from
+      # .markdownlint-cli2.jsonc, which the tool discovers for the working
+      # directory.
+      - id: markdownlint-cli2
+        additional_dependencies: ['markdownlint-rule-relative-links']
+
+      # One entry per fixed shape. Each names its own array and selects the
+      # documents it applies to; an array no hook reads is decoration.
+      - id: markdownlint-cli2
+        alias: md-adr
+        name: markdownlint (decision record heading shape)
+        additional_dependencies: ['markdownlint-rule-relative-links']
+        files: '^docs/decisions/(ADR-[0-9]+-.*|template)\.md$'
+        args: ['--config', '.markdownlint/adr.markdownlint-cli2.jsonc']
+
+      - id: markdownlint-cli2
+        alias: md-story
+        name: markdownlint (story heading shape)
+        additional_dependencies: ['markdownlint-rule-relative-links']
+        files: '^docs/plan/stories/[^/]+\.md$'
+        args: ['--config', '.markdownlint/story.markdownlint-cli2.jsonc']
+
+      - id: markdownlint-cli2
+        alias: md-epic
+        name: markdownlint (epic heading shape)
+        additional_dependencies: ['markdownlint-rule-relative-links']
+        files: '^docs/plan/epics/[^/]+\.md$'
+        args: ['--config', '.markdownlint/epic.markdownlint-cli2.jsonc']
+
+      - id: markdownlint-cli2
+        alias: md-charter
+        name: markdownlint (charter heading shape)
+        additional_dependencies: ['markdownlint-rule-relative-links']
+        files: '^docs/plan/charter\.md$'
+        args: ['--config', '.markdownlint/charter.markdownlint-cli2.jsonc']
+
+# docs/plan/open-questions.md is deliberately not gated. Its per-question
+# headings are dynamic, so the only array MD043 could carry is a bare `*` — and
+# a single `*` matches any number of headings, which was measured here to accept
+# a five-heading document. That array is decoration, not a contract, and a gate
+# proven unable to fail is worse than an absent one because it reports success.
+# The register's real contract is its `Blocks:` line, which the plan gate owns.
+
+# Two plan-zone gates are deliberately absent, because both need an installed
+# plan-xp and this repository does not vendor its schemas — a copy in the tree is
+# a second source of truth that drifts from the version the gate actually runs.
+# Once plan-xp is installed, add:
+#
+#   - check-jsonschema over docs/plan/lanes/*.yml and .plan-xp.yml, pointed at
+#     $PREFIX/share/plan-xp/schema/
+#   - a local `plan validate docs/plan` hook with pass_filenames: false
+#
+# Until then the lane files and the ranking rules are held by review.

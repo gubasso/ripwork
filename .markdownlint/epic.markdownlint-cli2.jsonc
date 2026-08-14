@@ -1,0 +1,24 @@
+// The epic heading shape, gated by MD043 required-headings. The `md-epic` hook
+// in ../.pre-commit-config.yaml owns which documents this applies to.
+//
+// Four story headings are deliberately absent. `In scope` orders a remainder
+// against a point budget and an epic has no budget; `Acceptance`, `Tasks`, and
+// `Rabbit holes` are obligations on a work session, and no session implements
+// an epic.
+{
+  "config": {
+    "MD043": {
+      "headings": [
+        "*",
+        "## Goal",
+        "## Example",
+        "## Core",
+        "## Out of scope",
+        "## Governed by",
+        "## Amends",
+        "## Done when",
+        "## Revisions"
+      ]
+    }
+  }
+}

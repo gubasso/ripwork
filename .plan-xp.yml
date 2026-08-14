@@ -1,0 +1,6 @@
+# The directory holding this file is the project root, so nothing is derived and
+# nothing is guessed. Every key is required and none has a default.
+plan_dir: docs/plan
+iteration:
+  start: "2026-08-17"
+  length_days: 14
